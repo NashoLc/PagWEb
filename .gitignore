@@ -1,2 +1,257 @@
-fuel/app/logs/*/*/*
-fuel/app/cache/*/*
+<?php
+    session_start();
+    include('acceso_db.php');
+?> 
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+		<meta name="author" content="Solucija (www.solucija.com)" />
+			<link rel="stylesheet" href="css/main.css" type="text/css" />
+			<link rel="stylesheet" type="text/css" href="estilo_ingre_libros.css" media="screen" />
+			<link href="css/style.css" media="screen" rel="stylesheet">
+			<style type="text/css">
+<!--
+/** 
+ * Slideshow style rules.
+ */
+#slideshow {
+	margin:0 auto;
+	width:640px;
+	height:263px;
+	background:transparent url(img/bg_slideshow.png) no-repeat 0 0;
+	position:relative;
+	margin-left: 145px;
+}
+#slideshow #slidesContainer {
+  margin:0 auto;
+  width:560px;
+  height:263px;
+  overflow:auto; /* allow scrollbar */
+  position:relative;
+}
+#slideshow #slidesContainer .slide {
+  margin:0 auto;
+  width:540px; /* reduce by 20 pixels of #slidesContainer to avoid horizontal scroll */
+  height:263px;
+  color: #102B56;
+}
+
+/** 
+ * Slideshow controls style rules.
+ */
+.control {
+  display:block;
+  width:39px;
+  height:263px;
+  text-indent:-10000px;
+  position:absolute;
+  cursor: pointer;
+}
+#leftControl {
+  top:0;
+  left:0;
+  background:transparent url(img/control_left.png) no-repeat 0 0;
+}
+#rightControl {
+  top:0;
+  right:0;
+  background:transparent url(img/control_right.png) no-repeat 0 0;
+}
+
+/** 
+ * Style rules for Demo page
+ */
+
+a {
+  color: #fff;
+  font-weight:bold;
+  text-decoration:none;
+}
+a:hover {
+  text-decoration:underline;
+}
+#pageContainer {
+  margin:0 auto;
+  width:960px;
+}
+#pageContainer h1 {
+  display:block;
+  width:960px;
+  height:114px;
+  background:transparent url(img/bg_pagecontainer_h1.jpg) no-repeat top left;
+  text-indent: -10000px;
+}
+.slide h2, .slide p {
+  margin:15px;
+}
+.slide h2 {
+  font: italic 24px Georgia, "Times New Roman", Times, serif;
+color: #102B56;
+letter-spacing: -1px;
+}
+.slide img {
+  float:right;
+  margin:0 15px;
+}
+#footer {
+  height:100px;
+}
+#footer p {
+  margin:30px auto 0 auto;
+  display:block;
+  width:560px;
+  height:40px;
+}
+-->
+</style>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  var currentPosition = 0;
+  var slideWidth = 560;
+  var slides = $('.slide');
+  var numberOfSlides = slides.length;
+
+  // Remove scrollbar in JS
+  $('#slidesContainer').css('overflow', 'hidden');
+
+  // Wrap all .slides with #slideInner div
+  slides
+    .wrapAll('<div id="slideInner"></div>')
+    // Float left to display horizontally, readjust .slides width
+	.css({
+      'float' : 'left',
+      'width' : slideWidth
+    });
+
+  // Set #slideInner width equal to total width of all slides
+  $('#slideInner').css('width', slideWidth * numberOfSlides);
+
+  // Insert controls in the DOM
+  $('#slideshow')
+    .prepend('<span class="control" id="leftControl">Clicking moves left</span>')
+    .append('<span class="control" id="rightControl">Clicking moves right</span>');
+
+  // Hide left arrow control on first load
+  manageControls(currentPosition);
+
+  // Create event listeners for .controls clicks
+  $('.control')
+    .bind('click', function(){
+    // Determine new position
+	currentPosition = ($(this).attr('id')=='rightControl') ? currentPosition+1 : currentPosition-1;
+    
+	// Hide / show controls
+    manageControls(currentPosition);
+    // Move slideInner using margin-left
+    $('#slideInner').animate({
+      'marginLeft' : slideWidth*(-currentPosition)
+    });
+  });
+
+  // manageControls: Hides and Shows controls depending on currentPosition
+  function manageControls(position){
+    // Hide left arrow if position is first slide
+	if(position==0){ $('#leftControl').hide() } else{ $('#leftControl').show() }
+	// Hide right arrow if position is last slide
+    if(position==numberOfSlides-1){ $('#rightControl').hide() } else{ $('#rightControl').show() }
+  }	
+});
+</script>
+			
+				<style type="text/css">
+					#side2 { 
+						float: center; 
+						width: 727px;
+						height: 211px;
+						color: #FFF9C9; 
+						background: #467612; 
+						padding: 11px; 
+						margin-left: 100px;
+						margin-right: auto; 
+					}
+					#side2 a { color: #D12813; }
+					#side2 li { padding: 0 0 10px; }
+				</style>
+					<title>Biblioteca CESXXI</title>
+	</head>
+		<body>
+			<?php
+				if(isset($_SESSION['usuario_nombre'])) {
+			?>
+		<div id="header">
+			<div class="wrap">
+				<h1 id="logo"><a href="#">BIBLIOTECA</a></h1>
+					<img src="images/encabezado.png">
+						<ul id="menu2">
+							<li><a class="current" href="perfil.php?id=<?=$_SESSION['usuario_id']?>"><strong>Bienvenido: <?=$_SESSION['usuario_nombre']?></strong></a></li>
+							<li><a href="libro.php">Libros</a></li>
+							<li><a href="nuevo.php">Nuevo Libro</a></li>
+							<li><a href="prestamos.php">Prestamo</a></li>
+							<li><a href="buscar2.php">Devolucion</a></li>
+							<li><a href="reportes.php">Reporte</a></li>
+							<li><a href="logout.php">Cerrar Sesión</a></li>				
+						</ul>
+			</div>
+		</div>
+	        <?php
+			}else {
+			?>
+		<div id="header">
+			<div class="wrap">
+				<h1 id="logo"><a href="#">BIBLIOTECA</a></h1>
+					<img src="images/encabezado.png">
+						<ul id="menu3">
+							<li><a class="current" href="registro.php">Registrarse</a></li>
+							<li><a class="current" href="acceso.php">Ingresar</a></li>
+						</ul>
+			</div>
+		</div>
+			<?php
+			}
+			?> 
+		<div class="wrap">
+			<div id="main">
+				<div id="slideshow">
+    <div id="slidesContainer">
+      <div class="slide">
+        <h2>¿Quienes somos?</h2>
+        <p><a href="http://sixrevisions.com/tutorials/web-development-tutorials/using-xampp-for-local-wordpress-theme-development/"><img src="img/img_slide_01.jpg" alt="An image that says Install X A M P P for wordpress." width="215" height="145" /></a>
+		Una institución educativa de vanguardia, de corte construtivista y humanista encaminada a dar un servicio de <a href="#">CALIDAD</a>, donde nuestro objetivo principal es ofrecer un alto nivel académico, teniendo como <a href="#">META</a> formar individuos autonomos tanto en el aspecto intelectual como moral, que les permita enfrentar los desafíos de un mundo globalizado que cambia dia a dia.</p>
+      </div>
+      <div class="slide">
+        <h2>Misión</h2>
+        <p><a href="http://sixrevisions.com/freebies/brushes/sr-grunge-free-high-resolution-photoshop-grunge-brushes/"><img src="img/img_slide_02.jpg" width="215" height="145" alt="A thumbnail image that says S R grunge photoshop brushes 6 high resolution grunge brushes by six revisions." /></a>Colaborar en la formación integral de nuestros alumnos por medio de un servicio educativo de calidad en educación inicial y en el nivel básico, medio superior y superior, en el marco de un modelo constructivista y humanista con un enfoque por competencias en el que se promueve la autonomía intelectual y moral.</p>
+        <p> 
+      </div>
+	   <div class="slide">
+        <h2>Visión</h2>
+        <p><a href="http://sixrevisions.com/freebies/brushes/sr-grunge-free-high-resolution-photoshop-grunge-brushes/"><img src="img/img_slide_03.jpg" width="215" height="145" alt="A thumbnail image that says S R grunge photoshop brushes 6 high resolution grunge brushes by six revisions." /></a>Proporcionar una oferta educativa de calidad a través de la mejora continua del equipo de trabajo, cubriendo el perfil de sus egresados, la cobertura a la demanda y la aportación de beneficios comunitarios, que la consolida como la mejor opción.</p>
+        <p> 
+      </div>
+      <div class="slide">
+        <h2>Valores</h2>
+        <p><a href="http://sixrevisions.com/freebies/textures/grunge-extreme-15-high-resolution-grunge-textures/"><img src="img/img_slide_04.jpg" width="215" height="145" alt="A thumbnail image that says grunge extreme 15 free high resolution grunge textures six revisions." />
+		</a><a href="#">Respeto</a> .- Capacidad para aceptarse y reconocer el derecho de los demas a ser diferentes cuidando todo lo que nos rodea.</p>
+		<p><a href="#">Responsabilidad</a>.- Capacidad para cumplir normas, compromisos y obligaciones en todas las situaciones de nuestra vida,aceptando las consecuencias de nuestras decisiones y acciones.</p>
+      </div>
+      <div class="slide">
+        <h2>Valores</h2>
+        <p><a href="http://sixrevisions.com/tutorials/photoshop-tutorials/how-to-create-a-slick-and-clean-button-in-photoshop/"><img src="img/img_slide_05.jpg" width="215" height="145" alt="Thumbnail image that says sleek button using photoshop that links to a Photoshop tutoril." /></a>
+		<p><a href="#">Honestidad</a> .- Actuar, vivir, y hablar con la verdad en todo momento, reconociendo y corrigiendo cuando nos equivocamos.</p>
+		<p><a href="#">Voluntad</a> .- Es la motivación que nos mueve a cumplir con todas las actividades de manera intencionada, tanto las que nos proponemos como las que debemos realizar.</p>
+		<p><a href="#">Lealtad</a> .- Responder sin condiciones a los principios, instituciones y personas con quienes existe un compromiso.</p>
+		</p>
+      </div>
+    </div>
+  </div>
+  <br></br>
+			</div>
+				<br></br>
+				<br></br>
+			<div id="footer">
+				<p>CES XXI Las Animas S.C - 2015</p>
+			</div>
+		</div>	
+		</body>
+</html>
